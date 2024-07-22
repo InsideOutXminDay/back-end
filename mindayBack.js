@@ -236,6 +236,28 @@ app.post('/creatediary', authenticateToken, async (req, res) => {
   }
 });
 
+////////////////////////////// community //////////////////////////////////
+
+app.get('/post', async (req, res) => {
+  try {
+    const post = await Post.findAll();
+    res.json(post);
+  } catch (error) {
+    console.error('Query Failed:', error);
+  }
+});
+
+
+app.get('/comment', async (req, res) => {
+  try {
+    const comment = await Comment.findAll();
+    res.json(comment);
+  } catch (error) {
+    console.error('Query Failed:', error);
+  }
+});
+
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
