@@ -19,13 +19,14 @@ const {
 const { passport, generateToken } = require('./auth/passport');
 
 const app = express();
-//const SECRET_KEY = 'your_secret_key';
+const SECRET_KEY = 'your_secret_key';
 
 app.use(cors());
 app.use(express.json());
 app.use(
   session({
-    secret: process.env.COOKIE_SECRET,
+    //secret: process.env.COOKIE_SECRET,
+    secret: SECRET_KEY,
     resave: false,
     saveUninitialized: false,
   })
@@ -35,6 +36,7 @@ app.use(passport.session());
 
 //토큰 인증 미들웨어
 const authenticateToken = (req, res, next) => {
+  console.log('req.headers:', req.headers);
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
