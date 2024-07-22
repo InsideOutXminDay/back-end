@@ -7,10 +7,12 @@ const { User } = require('../models');
 
 const SECRET_KEY = 'your_secret_key';
 
-passport.use(new LocalStrategy(
-  async (username, password, done) => {
+passport.use(
+  new LocalStrategy(async (username, password, done) => {
+    console.log('로컬 전략으로 넘어옴');
     try {
       const user = await User.findOne({ where: { username } });
+      console.log('user:', user);
       if (!user) {
         return done(null, false, { message: 'Incorrect username.' });
       }
@@ -22,32 +24,47 @@ passport.use(new LocalStrategy(
     } catch (error) {
       return done(error);
     }
-  }
-));
+  })
+);
 
-passport.use(new KakaoStrategy({
-    clientID: '9836c5307b64e9e7190f35c45010ebd6',//process.env.KAKAO_ID,//'your_kakao_client_id', // Add your Kakao Client ID
-    //clientSecret: 'your_kakao_client_secret', // Add your Kakao Client Secret
-    callbackURL: 'http://localhost:3000/auth/kakao/callback'//'/auth/kakao/callback'//'http://localhost:3000/auth/kakao/callback'
-  },
-  async (accessToken, refreshToken, profile, done) => {
-    try {
-      let user = await User.findOne({ where: { username: profile.id } });
-      if (!user) {
-        user = await User.create({ username: profile.id, password: '' });
+passport.use(
+  new KakaoStrategy(
+    {
+      clientID: process.env.KAKAO_ID,
+      callbackURL: 'http://localhost:3000/api/kakao/callback',
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      console.log('카카오로그인');
+      console.log('kakao profile: ', profile);
+      try {
+        const exUser = await User.findOne({
+          where: { snsId: profile.id, provider: 'kakao' },
+        });
+        if (exUser) {
+          done(null, exUser);
+        } else {
+          const newUser = await User.create({
+            email: profile._json?.kakao_account?.email,
+            nickname: profile.displayName,
+            snsId: profile.id,
+            provider: 'kakao',
+          });
+          done(null, newUser);
+        }
+      } catch (error) {
+        console.error(error);
+        done(error);
       }
-      return done(null, user);
-    } catch (error) {
-      return done(error);
     }
-  }
-));
+  )
+);
 
 passport.serializeUser((user, done) => {
-  done(null, user.userid);
+  done(null, user.id_user);
 });
 
 passport.deserializeUser(async (id, done) => {
+  //id = user.id_user
   try {
     const user = await User.findByPk(id);
     done(null, user);
@@ -57,10 +74,14 @@ passport.deserializeUser(async (id, done) => {
 });
 
 const generateToken = (user) => {
-  return jwt.sign({ userid: user.userid, username: user.username }, SECRET_KEY, { expiresIn: '1h' });
+  return jwt.sign(
+    { id_user: user.id_user, username: user.username },
+    SECRET_KEY,
+    { expiresIn: '1h' }
+  );
 };
 
 module.exports = {
   passport,
-  generateToken
+  generateToken,
 };
