@@ -14,6 +14,7 @@ const {
   Asklist,
   Diarylist,
   Diary,
+  Comment,
 } = require('./models');
 const { passport, generateToken } = require('./auth/passport');
 
@@ -238,7 +239,7 @@ app.post('/creatediary', authenticateToken, async (req, res) => {
 
 ////////////////////////////// community //////////////////////////////////
 
-app.get('/post', async (req, res) => {
+app.get('/postAll', authenticateToken, async (req, res) => {
   try {
     const post = await Post.findAll();
     res.json(post);
@@ -247,8 +248,34 @@ app.get('/post', async (req, res) => {
   }
 });
 
+app.get('/post', authenticateToken, async (req, res) => {
+  try {
+    const post = await Post.findAll({
+      where: {
+        anonymity: false,
+      },
+    });
+    res.json(post);
+  } catch (error) {
+    console.error('Query Failed:', error);
+  }
+});
 
-app.get('/comment', async (req, res) => {
+app.get('/mind', authenticateToken, async (req, res) => {
+  try {
+    const post = await Post.findAll({
+      where: {
+        anonymity: true,
+      },
+    });
+    res.json(post);
+  } catch (error) {
+    console.error('Query Failed:', error);
+  }
+});
+
+
+app.get('/comment', authenticateToken,async (req, res) => {
   try {
     const comment = await Comment.findAll();
     res.json(comment);
@@ -257,7 +284,71 @@ app.get('/comment', async (req, res) => {
   }
 });
 
+app.get('/postuser', authenticateToken, async (req, res) => {
+  try {
+    const user = await User.findAll();
+    res.json(user);
+  } catch (error) {
+    console.error('Query Failed:', error);
+  }
+});
 
+app.post('/new', authenticateToken, async (req, res) => {
+  const  { id_user, title, body, anonymity } = req.body.data;
+  try {
+    const post = await Post.create({
+      id_user: id_user,
+      title: title,
+      body: body,
+      anonymity: anonymity
+    });
+    res.json(post);
+  } catch (error) {
+    console.error('Query Failed:', error);
+  }
+});
+
+app.post('/comment', authenticateToken, async (req, res) => {
+  const { id_comment, body, id_user, id_post } = req.body.data;
+  try {
+    const comment = await Comment.create({
+      id_comment: id_comment,
+      body: body,
+      id_user: id_user,
+      id_post: id_post
+    });
+    res.json(comment);
+  } catch (error) {
+    console.error('Query Failed:', error);
+  }
+});
+
+app.post('/edit', authenticateToken, async (req, res) => {
+  const { title, body, id_post } = req.body.data;
+  try {
+    const edit = await Post.update(
+      {title: title, body: body},
+      {where: {id_post: id_post}});
+    res.json(edit);
+  } catch (error) {
+    console.error('Query Failed:', error);
+  }
+});
+
+app.post('/delete',  authenticateToken, async (req, res) => {
+  const { id_post, id_comment } = req.body.data;
+  try {
+    const comment = await Comment.destroy(
+      {where: {id_post: id_post,
+        id_comment: id_comment
+      }});
+    res.json(comment);
+  } catch (error) {
+    console.error('Query Failed:', error);
+  }
+});
+
+////////////////////////////// foot //////////////////////////////////
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
