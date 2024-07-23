@@ -15,6 +15,7 @@ const {
   Diarylist,
   Diary,
   Comment,
+  Contents
 } = require('./models');
 const { passport, generateToken } = require('./auth/passport');
 
@@ -341,7 +342,15 @@ app.post('/delete',  authenticateToken, async (req, res) => {
     console.error('Query Failed:', error);
   }
 });
-
+////////////////////////////// contents //////////////////////////////////
+app.get('/contents', authenticateToken, async (req, res) => {
+  try {
+    const contents = await Contents.findAll();
+    res.json(contents);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch books' });
+  }
+});
 ////////////////////////////// foot //////////////////////////////////
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
