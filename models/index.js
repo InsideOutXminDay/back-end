@@ -6,7 +6,8 @@ const User = require('./user');
 const Asklist = require('./asklist');
 const Diary = require('./diary');
 const Diarylist = require('./diarylist');
-const Comment = require('./comment')
+const Comment = require('./comment');
+const Contents = require('./contents');
 
 const env = process.env.NODE_ENV || 'development';
 const config = require('../config/config')[env];
@@ -22,7 +23,8 @@ const db = {
   Asklist: Asklist.init(sequelize),
   Comment: Comment.init(sequelize),
   Diary: Diary.init(sequelize),
-  Diarylist: Diarylist.init(sequelize)
+  Diarylist: Diarylist.init(sequelize),
+  Contents: Contents.init(sequelize)
 };
 
 
