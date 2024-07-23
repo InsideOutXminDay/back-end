@@ -91,10 +91,11 @@ app.post('/api/join/check', async (req, res) => {
 app.post('/api/login', (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
     if (err) return next(err);
-    if (!user) return res.status(401).json(info.message);
+    if (!user)
+      return res.status(200).json({ success: false, message: info.message });
 
     const token = generateToken(user);
-    res.json({ token, id_user:user.id_user });
+    res.json({ success: true, token, id_user: user.id_user });
   })(req, res, next);
 });
 
@@ -151,10 +152,13 @@ app.post('/updatechecklist', authenticateToken, async (req, res) => {
   const { state } = req.body;
   Object.keys(state).forEach(async (key) => {
     try {
-      const res = await Askcheck.update({
-        content: state[key].content,
-        isdone: state[key].isdone,
-      },{ where: { type: key, id_askcheck: state[key].id_askcheck } });
+      const res = await Askcheck.update(
+        {
+          content: state[key].content,
+          isdone: state[key].isdone,
+        },
+        { where: { type: key, id_askcheck: state[key].id_askcheck } }
+      );
       console.log('Update success!');
     } catch (err) {
       console.error(err);
@@ -268,8 +272,7 @@ app.get('/mind', authenticateToken, async (req, res) => {
   }
 });
 
-
-app.get('/comment', authenticateToken,async (req, res) => {
+app.get('/comment', authenticateToken, async (req, res) => {
   try {
     const comment = await Comment.findAll();
     res.json(comment);
@@ -288,13 +291,13 @@ app.get('/postuser', authenticateToken, async (req, res) => {
 });
 
 app.post('/new', authenticateToken, async (req, res) => {
-  const  { id_user, title, body, anonymity } = req.body.data;
+  const { id_user, title, body, anonymity } = req.body.data;
   try {
     const post = await Post.create({
       id_user: id_user,
       title: title,
       body: body,
-      anonymity: anonymity
+      anonymity: anonymity,
     });
     res.json(post);
   } catch (error) {
@@ -309,7 +312,7 @@ app.post('/comment', authenticateToken, async (req, res) => {
       id_comment: id_comment,
       body: body,
       id_user: id_user,
-      id_post: id_post
+      id_post: id_post,
     });
     res.json(comment);
   } catch (error) {
@@ -321,21 +324,21 @@ app.post('/edit', authenticateToken, async (req, res) => {
   const { title, body, id_post } = req.body.data;
   try {
     const edit = await Post.update(
-      {title: title, body: body},
-      {where: {id_post: id_post}});
+      { title: title, body: body },
+      { where: { id_post: id_post } }
+    );
     res.json(edit);
   } catch (error) {
     console.error('Query Failed:', error);
   }
 });
 
-app.post('/delete',  authenticateToken, async (req, res) => {
+app.post('/delete', authenticateToken, async (req, res) => {
   const { id_post, id_comment } = req.body.data;
   try {
-    const comment = await Comment.destroy(
-      {where: {id_post: id_post,
-        id_comment: id_comment
-      }});
+    const comment = await Comment.destroy({
+      where: { id_post: id_post, id_comment: id_comment },
+    });
     res.json(comment);
   } catch (error) {
     console.error('Query Failed:', error);

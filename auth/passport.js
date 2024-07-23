@@ -14,11 +14,11 @@ passport.use(
       const user = await User.findOne({ where: { username } });
       console.log('user:', user);
       if (!user) {
-        return done(null, false, { message: 'Incorrect username.' });
+        return done(null, false, { message: '존재하지 않는 아이디입니다.' });
       }
       const isValid = await bcrypt.compare(password, user.password);
       if (!isValid) {
-        return done(null, false, { message: 'Incorrect password.' });
+        return done(null, false, { message: '비밀번호를 확인해주세요.' });
       }
       return done(null, user);
     } catch (error) {
