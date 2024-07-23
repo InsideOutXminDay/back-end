@@ -288,7 +288,7 @@ app.get('/postuser', authenticateToken, async (req, res) => {
 });
 
 app.post('/new', authenticateToken, async (req, res) => {
-  const  { id_user, title, body, anonymity } = req.body.data;
+  const  { id_user, title, body, anonymity } = req.body;
   try {
     const post = await Post.create({
       id_user: id_user,
@@ -303,7 +303,7 @@ app.post('/new', authenticateToken, async (req, res) => {
 });
 
 app.post('/comment', authenticateToken, async (req, res) => {
-  const { id_comment, body, id_user, id_post } = req.body.data;
+  const { id_comment, body, id_user, id_post } = req.body;
   try {
     const comment = await Comment.create({
       id_comment: id_comment,
@@ -318,7 +318,7 @@ app.post('/comment', authenticateToken, async (req, res) => {
 });
 
 app.post('/edit', authenticateToken, async (req, res) => {
-  const { title, body, id_post } = req.body.data;
+  const { title, body, id_post } = req.body;
   try {
     const edit = await Post.update(
       {title: title, body: body},
@@ -330,7 +330,7 @@ app.post('/edit', authenticateToken, async (req, res) => {
 });
 
 app.post('/delete',  authenticateToken, async (req, res) => {
-  const { id_post, id_comment } = req.body.data;
+  const { id_post, id_comment } = req.body;
   try {
     const comment = await Comment.destroy(
       {where: {id_post: id_post,
