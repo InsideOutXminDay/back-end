@@ -94,7 +94,7 @@ app.post('/api/login', (req, res, next) => {
     if (!user) return res.status(401).json(info.message);
 
     const token = generateToken(user);
-    res.json({ token });
+    res.json({ token, id_user:user.id_user });
   })(req, res, next);
 });
 
@@ -163,7 +163,7 @@ app.post('/updatechecklist', authenticateToken, async (req, res) => {
 });
 
 app.post('/createchecklist', authenticateToken, async (req, res) => {
-  const { user_id, state } = req.body;
+  const { userId, state } = req.body;
   Object.keys(state).forEach(async (key) => {
     try {
       const newAskcheck = await Askcheck.create({
@@ -174,7 +174,7 @@ app.post('/createchecklist', authenticateToken, async (req, res) => {
       console.log('newAskcheck.id_askcheck', newAskcheck.id_askcheck);
       await Asklist.create({
         id_askcheck: newAskcheck.id_askcheck,
-        id_user: user_id,
+        id_user: parseInt(userId.id),
       });
       console.log('Create success!');
     } catch (err) {
