@@ -36,7 +36,7 @@ app.use(passport.session());
 
 //토큰 인증 미들웨어
 const authenticateToken = (req, res, next) => {
-  console.log('req.headers:', req.headers);
+  // console.log('req.headers:', req.headers);
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
@@ -148,31 +148,23 @@ app.get('/askchecks', authenticateToken, async (req, res) => {
 });
 
 app.post('/updatechecklist', authenticateToken, async (req, res) => {
-  const { id_user, content, isdone, type, id_askcheck } = req.body;
-  console.log('updatechecklist', id_askcheck, id_user, content, isdone, type);
-  try {
-    const AskLists = await Asklist.findAll({ where: { id_user: id_user } });
-    if (AskLists.length > 0) {
-      const AskCheckId = AskLists.map((record) => record.id_askcheck);
-      await Askcheck.update(
-        { content, isdone },
-        { where: { type, id_askcheck: AskCheckId } }
-      );
-      console.log('Update successful');
-    } else {
-      console.log('No matching AskList records found');
+  const { state } = req.body;
+  Object.keys(state).forEach(async (key) => {
+    try {
+      const res = await Askcheck.update({
+        content: state[key].content,
+        isdone: state[key].isdone,
+      },{ where: { type: key, id_askcheck: state[key].id_askcheck } });
+      console.log('Update success!');
+    } catch (err) {
+      console.error(err);
     }
-  } catch (error) {
-    console.error('Error updating AskCheck:', error);
-  }
+  });
 });
 
 app.post('/createchecklist', authenticateToken, async (req, res) => {
   const { user_id, state } = req.body;
   Object.keys(state).forEach(async (key) => {
-    console.log(key);
-    console.log(state[key].content);
-    console.log(user_id);
     try {
       const newAskcheck = await Askcheck.create({
         content: state[key].content,
