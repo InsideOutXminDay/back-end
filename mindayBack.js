@@ -4,6 +4,8 @@ const cors = require('cors');
 const session = require('express-session');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const bcrypt = require('bcrypt');
+
 dotenv.config();
 const {
   sequelize,
@@ -15,6 +17,7 @@ const {
   Diarylist,
   Diary,
   Comment,
+  Contents
 } = require('./models');
 const { passport, generateToken } = require('./auth/passport');
 
@@ -291,7 +294,9 @@ app.get('/postuser', authenticateToken, async (req, res) => {
 });
 
 app.post('/new', authenticateToken, async (req, res) => {
-  const { id_user, title, body, anonymity } = req.body.data;
+
+  const  { id_user, title, body, anonymity } = req.body;
+
   try {
     const post = await Post.create({
       id_user: id_user,
@@ -306,7 +311,7 @@ app.post('/new', authenticateToken, async (req, res) => {
 });
 
 app.post('/comment', authenticateToken, async (req, res) => {
-  const { id_comment, body, id_user, id_post } = req.body.data;
+  const { id_comment, body, id_user, id_post } = req.body;
   try {
     const comment = await Comment.create({
       id_comment: id_comment,
@@ -321,7 +326,7 @@ app.post('/comment', authenticateToken, async (req, res) => {
 });
 
 app.post('/edit', authenticateToken, async (req, res) => {
-  const { title, body, id_post } = req.body.data;
+  const { title, body, id_post } = req.body;
   try {
     const edit = await Post.update(
       { title: title, body: body },
@@ -333,8 +338,9 @@ app.post('/edit', authenticateToken, async (req, res) => {
   }
 });
 
-app.post('/delete', authenticateToken, async (req, res) => {
-  const { id_post, id_comment } = req.body.data;
+
+app.post('/delete',  authenticateToken, async (req, res) => {
+  const { id_post, id_comment } = req.body;
   try {
     const comment = await Comment.destroy({
       where: { id_post: id_post, id_comment: id_comment },
@@ -344,9 +350,58 @@ app.post('/delete', authenticateToken, async (req, res) => {
     console.error('Query Failed:', error);
   }
 });
+////////////////////////////// contents //////////////////////////////////
+app.get('/contents', authenticateToken, async (req, res) => {
+  try {
+    const contents = await Contents.findAll();
+    res.json(contents);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch books' });
+  }
+});
+////////////////////////////// setting feat //////////////////////////////////
+app.get('/getusername', authenticateToken, async (req, res) => {
+  try {
+    const user = await User.findOne({ where: { id_user: req.user.id_user } });
+    res.json({
+      username: user.username,
+      nickname: user.nickname,
+      email: user.email
+    });
+  } catch (error) {
+    res.status(500).json({ error: '정보를 가져오는 중 오류 발생' });
+  }
+});
+
+app.post('/updateuser', authenticateToken, async (req, res) => {
+  const { id_user, nickname, email, currentPassword, newPassword } = req.body.requestData;
+  try {
+    const user = await User.findOne({ where: { id_user:parseInt(id_user) } });
+    if (!user) {
+      return res.status(404).json({ error: '사용자를 찾을 수 없습니다.' });
+    }
+    
+    const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+    if (!isPasswordValid) {
+      return res.status(501).json({ error: '현재 비밀번호가 일치하지 않습니다.' });
+    }
+    
+    const hashedNewPassword = await User.hashPassword(newPassword);
+
+    await User.update({
+      nickname,
+      email,
+      password:hashedNewPassword
+    },{ where: { id_user: parseInt(id_user) } });
+    console.log('Update success!');
+    res.status(200).json({ message: '정보가 성공적으로 업데이트되었습니다.' });
+  } catch (error) {
+    res.status(502).json({ error: '정보 변경에 오류가 발생했습니다.' });
+  }
+});
 
 ////////////////////////////// foot //////////////////////////////////
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.REACT_APP_API_URL || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   sequelize.sync();

@@ -3,8 +3,8 @@ const { Model, DataTypes } = require('sequelize');
 class Contents extends Model {
   static init(sequelize) {
     return super.init({
-      content_id: { type: DataTypes.INTEGER, primaryKey: true},
-      maincontent_id:{type: DataTypes.INTEGER, allowNull: false},
+      maincontent_id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+      content_id:{type: DataTypes.INTEGER, allowNull: false},
       subcontent_id: { type: DataTypes.INTEGER, allowNull: false },
       content_name: { type: DataTypes.STRING, allowNull: false },
       subcontent_name : { type: DataTypes.STRING, allowNull: false },
