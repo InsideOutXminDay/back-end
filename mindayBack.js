@@ -17,7 +17,8 @@ const {
   Diarylist,
   Diary,
   Comment,
-  Contents
+  Contents,
+  EmotionList
 } = require('./models');
 const { passport, generateToken } = require('./auth/passport');
 
@@ -397,6 +398,16 @@ app.post('/updateuser', authenticateToken, async (req, res) => {
     res.status(200).json({ message: '정보가 성공적으로 업데이트되었습니다.' });
   } catch (error) {
     res.status(502).json({ error: '정보 변경에 오류가 발생했습니다.' });
+  }
+});
+
+//////////////////////////// emotionlist feat ////////////////////////////////
+app.get('/emotionicons', authenticateToken, async (req, res) => {
+  try {
+    const emotionicons = await EmotionList.findAll();
+    res.json(emotionicons);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch books' });
   }
 });
 
