@@ -312,10 +312,9 @@ app.post('/new', authenticateToken, async (req, res) => {
 });
 
 app.post('/comment', authenticateToken, async (req, res) => {
-  const { id_comment, body, id_user, id_post } = req.body;
+  const { body, id_user, id_post } = req.body;
   try {
     const comment = await Comment.create({
-      id_comment: id_comment,
       body: body,
       id_user: id_user,
       id_post: id_post,
