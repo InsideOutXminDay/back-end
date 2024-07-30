@@ -18,7 +18,7 @@ const {
   Diary,
   Comment,
   Contents,
-  EmotionList
+  EmotionList,
 } = require('./models');
 const { passport, generateToken } = require('./auth/passport');
 
@@ -56,18 +56,14 @@ const authenticateToken = (req, res, next) => {
 //회원가입
 app.post('/api/join', async (req, res) => {
   const { username, nickname, email, password } = req.body;
-  console.log('회원가입 요청 받음', req.body);
-  console.log('post 요청');
   try {
     const hashedPassword = await User.hashPassword(password);
-    console.log('비밀번호 해싱됨');
     const user = await User.create({
       username,
       nickname,
       email,
       password: hashedPassword,
     });
-    console.log('사용자 정보 저장 완료');
     res.json(user);
   } catch (error) {
     res.status(500).json({ error: '회원가입 실패' });
@@ -75,10 +71,13 @@ app.post('/api/join', async (req, res) => {
 });
 //아이디 중복 확인
 app.post('/api/join/check', async (req, res) => {
-  const { username } = req.body;
-  console.log('아이디 중복 확인 요청 받음', username);
+  const { username = '' } = req.body;
+  //빈 문자열은 바로 반환
+  if (!username.trim()) {
+    return res.status(200).json({ error: 'blank' });
+  }
+  //db에서 조회
   try {
-    //db에서 조회
     const check = await User.findOne({ where: { username } });
     if (check) {
       //중복됨
@@ -86,8 +85,9 @@ app.post('/api/join/check', async (req, res) => {
     } else {
       res.status(200).json({ exist: false });
     }
-  } catch (error) {
-    res.status(500).json({ error: '아이디 중복 확인이 안 됨' });
+  } catch (err) {
+    console.error('DB 조회 중 오류 발생: ', err);
+    res.status(500).json({ error: '서버 오류' });
   }
 });
 
@@ -295,8 +295,7 @@ app.get('/postuser', authenticateToken, async (req, res) => {
 });
 
 app.post('/new', authenticateToken, async (req, res) => {
-
-  const  { id_user, title, body, anonymity } = req.body;
+  const { id_user, title, body, anonymity } = req.body;
 
   try {
     const post = await Post.create({
@@ -338,8 +337,7 @@ app.post('/edit', authenticateToken, async (req, res) => {
   }
 });
 
-
-app.post('/delete',  authenticateToken, async (req, res) => {
+app.post('/delete', authenticateToken, async (req, res) => {
   const { id_post, id_comment } = req.body;
   try {
     const comment = await Comment.destroy({
@@ -366,7 +364,7 @@ app.get('/getusername', authenticateToken, async (req, res) => {
     res.json({
       username: user.username,
       nickname: user.nickname,
-      email: user.email
+      email: user.email,
     });
   } catch (error) {
     res.status(500).json({ error: '정보를 가져오는 중 오류 발생' });
@@ -374,25 +372,34 @@ app.get('/getusername', authenticateToken, async (req, res) => {
 });
 
 app.post('/updateuser', authenticateToken, async (req, res) => {
-  const { id_user, nickname, email, currentPassword, newPassword } = req.body.requestData;
+  const { id_user, nickname, email, currentPassword, newPassword } =
+    req.body.requestData;
   try {
-    const user = await User.findOne({ where: { id_user:parseInt(id_user) } });
+    const user = await User.findOne({ where: { id_user: parseInt(id_user) } });
     if (!user) {
       return res.status(404).json({ error: '사용자를 찾을 수 없습니다.' });
     }
-    
-    const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+
+    const isPasswordValid = await bcrypt.compare(
+      currentPassword,
+      user.password
+    );
     if (!isPasswordValid) {
-      return res.status(501).json({ error: '현재 비밀번호가 일치하지 않습니다.' });
+      return res
+        .status(501)
+        .json({ error: '현재 비밀번호가 일치하지 않습니다.' });
     }
-    
+
     const hashedNewPassword = await User.hashPassword(newPassword);
 
-    await User.update({
-      nickname,
-      email,
-      password:hashedNewPassword
-    },{ where: { id_user: parseInt(id_user) } });
+    await User.update(
+      {
+        nickname,
+        email,
+        password: hashedNewPassword,
+      },
+      { where: { id_user: parseInt(id_user) } }
+    );
     console.log('Update success!');
     res.status(200).json({ message: '정보가 성공적으로 업데이트되었습니다.' });
   } catch (error) {
