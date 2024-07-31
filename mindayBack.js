@@ -23,14 +23,12 @@ const {
 const { passport, generateToken } = require('./auth/passport');
 
 const app = express();
-const SECRET_KEY = 'your_secret_key';
 
 app.use(cors());
 app.use(express.json());
 app.use(
   session({
-    //secret: process.env.COOKIE_SECRET,
-    secret: SECRET_KEY,
+    secret: process.env.SECRET_KEY,
     resave: false,
     saveUninitialized: false,
   })
@@ -46,7 +44,7 @@ const authenticateToken = (req, res, next) => {
 
   if (!token) return res.sendStatus(401);
 
-  jwt.verify(token, SECRET_KEY, (err, user) => {
+  jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
     if (err) return res.sendStatus(403);
     req.user = user;
     next();
