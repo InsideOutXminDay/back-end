@@ -10,6 +10,6 @@
 
 
 > ## 팀원
-- Hyemin Oh : diary, paragraph, checklist, contents, setting feat
-- hw : login, sign-up, Token middleware feat
-- [mj05](https://github.com/amamj05) : post CRUD, comment CRUD feat
+- :seedling: [Hyemin Oh](https://github.com/kelly2657) : diary, paragraph, checklist, contents, setting feat
+- :seedling: [hw](https://github.com/Hye1JEong) : login, sign-up, Token middleware feat
+- :seedling: [mj05](https://github.com/amamj05) : post CRUD, comment CRUD feat
