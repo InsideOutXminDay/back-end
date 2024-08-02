@@ -3,8 +3,13 @@
 <img src="https://img.shields.io/badge/javaScript-F7DF1E?style=for-the-badge&logo=javaScript&logoColor=white">  <img src="https://img.shields.io/badge/Passport-34E27A?style=for-the-badge&logo=passport&logoColor=white">  <img src="https://img.shields.io/badge/jsonwebtokens-000000?style=for-the-badge&logo=jsonwebtokenst&logoColor=white">  <img src="https://img.shields.io/badge/express-000000?style=for-the-badge&logo=express&logoColor=white">  <img src="https://img.shields.io/badge/dotenv-ECD53F?style=for-the-badge&logo=dotenv&logoColor=white">  <img src="https://img.shields.io/badge/sequelize-52B0E7?style=for-the-badge&logo=Sequelize&logoColor=white"> 
 
 
-> ## 기술 스택
-- express : node.js 에서 자바스크립트로 API 서버를 구축할 수 있도록 채택하였습니다. 
+> ## 기술 스택 선정 이유
+- Express : Node.js 에서 자바스크립트로 API 서버를 구축할 수 있도록 채택하였습니다.
+- Sequelize : Passport 와 연계하여 로그인 및 회원가입을 쉽게 구현할 수 있도록 채택하였습니다.
+- Passport : 로그인 인증과 세션 관리를 위해 채택하였습니다
+- Jsonwebtokenst : 로그인 관리를 토큰으로 하기 위해 채택하였습니다
+- Dotenv : 환경 변수 처리를 위해 채택하였습니다
+- JavaScript : 프론트엔드와 기술 스택을 통합하기 위해 채택하였습니다 
 
 
 > ## 주요 기능
