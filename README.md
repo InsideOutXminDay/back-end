@@ -16,6 +16,6 @@
 :seedling: [hw](https://github.com/Hye1JEong)
 
 - login, sign-up, Token middleware feat
-:seedling: [mj05](https://github.com/amamj05)
 
+:seedling: [mj05](https://github.com/amamj05)
 - post CRUD, comment CRUD feat
