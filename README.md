@@ -7,3 +7,9 @@
 1. 로그인 & 회원가입 기능
 2. JWT 토큰 인증 미들웨어
 3. 프론트에서 사용자가 요청하는 각 API 호출에 대한 응답
+
+
+> ## 팀원
+- 오혜민 : diary, paragraph, checklist, contents, setting feat
+- 정혜원 : login, sign-up, Token middleware feat
+- 홍미지 : post CRUD, comment CRUD feat
