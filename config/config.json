@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "admin",
-    "password": "insidedb1234",
+    "password": "",
     "database": "insideout",
     "host": "insideout.c1e8i44i6xlu.ap-northeast-2.rds.amazonaws.com",
     "dialect": "mysql"
