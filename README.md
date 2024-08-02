@@ -10,6 +10,6 @@
 
 
 > ## 팀원
-- 오혜민 : diary, paragraph, checklist, contents, setting feat
-- 정혜원 : login, sign-up, Token middleware feat
-- 홍미지 : post CRUD, comment CRUD feat
+- Hyemin Oh : diary, paragraph, checklist, contents, setting feat
+- hw : login, sign-up, Token middleware feat
+- mj05 : post CRUD, comment CRUD feat
