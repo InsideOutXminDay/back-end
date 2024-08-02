@@ -10,12 +10,12 @@
 
 
 > ## 팀원
-:seedling: [Hyemin Oh](https://github.com/kelly2657) 
+:cd: [Hyemin Oh](https://github.com/kelly2657) 
 - diary, paragraph, checklist, contents, setting feat
 
-:seedling: [hw](https://github.com/Hye1JEong)
+:dvd: [hw](https://github.com/Hye1JEong)
 
 - login, sign-up, Token middleware feat
 
-:seedling: [mj05](https://github.com/amamj05)
+:floppy_disk: [mj05](https://github.com/amamj05)
 - post CRUD, comment CRUD feat
