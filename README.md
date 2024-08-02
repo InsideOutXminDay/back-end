@@ -21,11 +21,11 @@
 
 > ## 팀원
 :christmas_tree: [Hyemin Oh](https://github.com/kelly2657) 
-- diary CURD, paragraph, checklist, contents, setting feat
+- diary CURD, paragraph, checklist, contents, setting feat, Sequelize Model
 
 :snowman: [hw](https://github.com/Hye1JEong)
 
-- login, sign-up, JWT feat
+- login, sign-up, JWT feat, Sequelize Model
 
 :santa: [mj05](https://github.com/amamj05)
 - post CRUD, comment CRUD feat
