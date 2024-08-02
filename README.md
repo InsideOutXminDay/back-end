@@ -12,4 +12,4 @@
 > ## 팀원
 - Hyemin Oh : diary, paragraph, checklist, contents, setting feat
 - hw : login, sign-up, Token middleware feat
-- mj05 : post CRUD, comment CRUD feat
+- [mj05](https://github.com/amamj05) : post CRUD, comment CRUD feat
