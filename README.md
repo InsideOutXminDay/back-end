@@ -10,12 +10,12 @@
 
 
 > ## 팀원
-:cd: [Hyemin Oh](https://github.com/kelly2657) 
+:christmas_tree: [Hyemin Oh](https://github.com/kelly2657) 
 - diary, paragraph, checklist, contents, setting feat
 
-:dvd: [hw](https://github.com/Hye1JEong)
+:snowman: [hw](https://github.com/Hye1JEong)
 
 - login, sign-up, Token middleware feat
 
-:floppy_disk: [mj05](https://github.com/amamj05)
+:santa: [mj05](https://github.com/amamj05)
 - post CRUD, comment CRUD feat
