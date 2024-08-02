@@ -2,4 +2,4 @@
 
 minDay 프로젝트의 백엔드입니다
 
-<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<img src="https://img.shields.io/badge/javascript-#F7DF1E?style=for-the-badge&logo=javascript&logoColor=white"> 
