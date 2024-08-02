@@ -14,7 +14,7 @@
 :christmas_tree: [Hyemin Oh](https://github.com/kelly2657) 
 - diary CURD, paragraph, checklist, contents, setting feat
 
-:snowman: ![hw](https://github.com/Hye1JEong)
+:snowman: [hw](https://github.com/Hye1JEong)
 
 - login, sign-up, Token middleware feat
 
